@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"encoding/json"
 )
 
@@ -26,7 +27,8 @@ func (dr DistanceResponse) getDistance() (meters float64) {
 	return
 }
 func GetDistance(p1, p2 string) (meters float64) {
-
+	p1 = url.QueryEscape(p1)
+	p2 = url.QueryEscape(p2)
 	d, f := filecache.GetDistance(p1, p2)
 	if f {
 		return d.Meters

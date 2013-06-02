@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strings"
 	"model"
+	"net/url"
 )
 
 
@@ -33,8 +34,9 @@ type AddressResponse struct {
 
 
 func getGeometry(postcode string) (lat, lng float32) {
-	url := "http://maps.googleapis.com/maps/api/geocode/json?address=" + postcode + "&sensor=false"
-	res, err := http.Get(url)
+	postcode = url.QueryEscape(postcode)
+	urlGeometry := "http://maps.googleapis.com/maps/api/geocode/json?address=" + postcode + "&sensor=false"
+	res, err := http.Get(urlGeometry)
 	if err != nil {
 		log.Fatal(err)
 	}
