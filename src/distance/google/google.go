@@ -1,7 +1,7 @@
 package google
 
 import (
-	"filecache"
+	"distance/filecache"
 	"fmt"
 	"io/ioutil"
 	"net/http"

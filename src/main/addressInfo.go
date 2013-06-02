@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	postcode := "EX16 6AaB"
+	postcode := "EX16 6AB"
 	address, err := addrLookup.GetAddress(postcode)
 	if err != nil {
 		fmt.Printf("%+v\n", err)

@@ -1,6 +1,7 @@
 package google
 
 import (
+	"addrLookup/filecache"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -70,12 +71,20 @@ func contains(sl []string, text string) bool {
 }
 
 func GetAddress(postcode string) (model.Address, error) {
+	a, f := filecache.GetAddress(postcode)
+	if f {
+		return a, nil
+	}
+
 	lat, lng, err := getGeometry(postcode)
 	if err != nil {
 		address := model.Address{}
 		return address, err
 	}
 	address, err := getAddress(lat, lng)
+	if err == nil {
+		filecache.CacheAddress(address)
+	}
 	return address, err
 }
 func getAddress(lat, lng float32) (model.Address, error) {
