@@ -34,8 +34,8 @@ func GetDistance(p1, p2 string) (meters float64) {
 		return d.Meters
 	}
 
-	driveTime := "http://maps.googleapis.com/maps/api/directions/json?origin=%s&destination=%s&sensor=false"
-	driveTimeUrl := fmt.Sprintf(driveTime, p1, p2)
+	urlTemplate := "http://maps.googleapis.com/maps/api/directions/json?origin=%s&destination=%s&sensor=false"
+	driveTimeUrl := fmt.Sprintf(urlTemplate, p1, p2)
 	fmt.Println(driveTimeUrl)
 
 	res, err := http.Get(driveTimeUrl)

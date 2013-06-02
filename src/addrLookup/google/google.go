@@ -75,8 +75,8 @@ func GetAddress(postcode string) model.Address {
 }
 func getAddress(lat, lng float32) model.Address {
 	fmt.Println("lat: %g lng: %g", lat, lng)
-	geocode := "http://maps.googleapis.com/maps/api/geocode/json?latlng=%g,%g&sensor=false"
-	geocodeUrl := fmt.Sprintf(geocode, lat, lng)
+	urlTemplate := "http://maps.googleapis.com/maps/api/geocode/json?latlng=%g,%g&sensor=false"
+	geocodeUrl := fmt.Sprintf(urlTemplate, lat, lng)
 	fmt.Println(geocodeUrl)
 
 	res, err := http.Get(geocodeUrl)
