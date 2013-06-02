@@ -9,6 +9,7 @@ import (
 	"strings"
 	"model"
 	"net/url"
+	"errors"
 )
 
 
@@ -33,28 +34,29 @@ type AddressResponse struct {
 }
 
 
-func getGeometry(postcode string) (lat, lng float32) {
+func getGeometry(postcode string) (lat, lng float32, err error) {
 	postcode = url.QueryEscape(postcode)
 	urlGeometry := "http://maps.googleapis.com/maps/api/geocode/json?address=" + postcode + "&sensor=false"
 	res, err := http.Get(urlGeometry)
 	if err != nil {
-		log.Fatal(err)
+		return 0, 0, err
 	}
 	rawResponse, err := ioutil.ReadAll(res.Body)
 	res.Body.Close()
 	if err != nil {
-		//TODO cope with error
-		log.Fatal(err)
+		return 0, 0, err
 	}
-
+	
 	postCodeJson := PostCodeResponse{}
 	if err := json.Unmarshal(rawResponse, &postCodeJson); err == nil {
-		//TODO cope with no results
+		if len(postCodeJson.Results) == 0 {
+			return 0, 0, errors.New(fmt.Sprintf("Unable to find postcode: '%s'", postcode))
+		}
+		
 		lat = postCodeJson.Results[0].Geometry.Location.Lat
 		lng = postCodeJson.Results[0].Geometry.Location.Lng
 	} else {
-		//TODO cope with error
-		log.Fatal(err)
+		return 0, 0, err
 	}
 	return
 }
@@ -68,42 +70,44 @@ func contains(sl []string, text string) bool {
 	return false
 }
 
-func GetAddress(postcode string) model.Address {
-	lat, lng := getGeometry(postcode)
-	address := getAddress(lat, lng)
-	return address
+func GetAddress(postcode string) (model.Address, error) {
+	lat, lng, err := getGeometry(postcode)
+	if err != nil {
+		address := model.Address{}
+		return address, err
+	}
+	address, err := getAddress(lat, lng)
+	return address, err
 }
-func getAddress(lat, lng float32) model.Address {
-	fmt.Println("lat: %g lng: %g", lat, lng)
+func getAddress(lat, lng float32) (model.Address, error) {
 	urlTemplate := "http://maps.googleapis.com/maps/api/geocode/json?latlng=%g,%g&sensor=false"
 	geocodeUrl := fmt.Sprintf(urlTemplate, lat, lng)
-	fmt.Println(geocodeUrl)
+	address := model.Address{}
 
 	res, err := http.Get(geocodeUrl)
 	if err != nil {
 		log.Fatal(err)
+		return address, err
 	}
 	rawResponse, err := ioutil.ReadAll(res.Body)
 	res.Body.Close()
 	if err != nil {
-		//TODO cope with error
 		log.Fatal(err)
+		return address, err
 	}
 
 	addressResponse := AddressResponse{}
-	address := model.Address{}
 	if err := json.Unmarshal(rawResponse, &addressResponse); err == nil {
 		//get first one as its most accurate
-		fmt.Println(addressResponse.Results[0])
-		//TODO cope with no results
-		//longName := addressResponse.Results[0].address_components[0].long_name
-
+		if len(addressResponse.Results) == 0 {
+			return address, errors.New(fmt.Sprintf("Unable to find address for a latitude '%s' and longtitude '%s'postcode: '%s'", lat, lng))
+		}		
+		
 		addressSlice := addressResponse.Results[0]
 		addressData := addressSlice.Address_components
 		for i := 0; i < len(addressData); i++ {
 			addressElem := addressData[i]
-			//if addressElem.Long_name
-			fmt.Printf("p[%v] == %v\n", i, addressElem.Long_name)
+			//fmt.Printf("p[%v] == %v\n", i, addressElem.Long_name)
 			if contains(addressElem.Types, "street_number") {
 				address.HouseNumber = addressElem.Long_name
 			} else if contains(addressElem.Types, "route") {
@@ -119,9 +123,8 @@ func getAddress(lat, lng float32) model.Address {
 			}
 		}
 	} else {
-		//TODO cope with error
-		log.Fatal(err)
+		return address, err
 	}
 
-	return address
+	return address, nil
 }
