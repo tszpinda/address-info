@@ -10,7 +10,7 @@ import (
 	"model"
 )
 
-var filename = "/tmp/cache-distance.txt"
+var filename = os.TempDir() + "/cache-distance.txt"
 var cache map[string]model.Distance
 var cacheLock sync.RWMutex
 

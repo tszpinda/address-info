@@ -9,7 +9,7 @@ import (
 	"model"
 )
 
-var filename = "/tmp/cache-address.txt"
+var filename = os.TempDir() + "/cache-address.txt" //"/tmp/cache-address.txt"
 var cache map[string]model.Address
 var cacheLock sync.RWMutex
 
