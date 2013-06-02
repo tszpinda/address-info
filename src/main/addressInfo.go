@@ -3,11 +3,12 @@ package main
 import (
 	addrLookup "addrLookup/google"
 	distLookup "distance/google"
+	"log"
 	"fmt"
 )
 
 func main() {
-	postcode := "EX16 6AB"
+	postcode := "EX16 6AaB"
 	address, err := addrLookup.GetAddress(postcode)
 	if err != nil {
 		fmt.Printf("%+v\n", err)
@@ -21,12 +22,14 @@ func main() {
 	m, err := distLookup.GetDistance(postcode, postcode2)
 	if err != nil {
 		fmt.Printf("%+v\n", err)
+		log.Fatal(err)
 	} else {
 		fmt.Printf("q1: %v \n", m)
 	}
 	m, err = distLookup.GetDistance(postcode2, postcode)
 	if err != nil {
 		fmt.Printf("%+v\n", err)
+		log.Fatal(err)
 	} else {
 		fmt.Printf("q2: %v \n", m)
 	}

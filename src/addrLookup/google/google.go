@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strings"
 	"model"
@@ -86,13 +85,11 @@ func getAddress(lat, lng float32) (model.Address, error) {
 
 	res, err := http.Get(geocodeUrl)
 	if err != nil {
-		log.Fatal(err)
 		return address, err
 	}
 	rawResponse, err := ioutil.ReadAll(res.Body)
 	res.Body.Close()
 	if err != nil {
-		log.Fatal(err)
 		return address, err
 	}
 
