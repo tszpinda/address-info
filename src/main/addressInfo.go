@@ -1,7 +1,7 @@
 package main
 
 import (
-	address "addrLookup"
+	address "address"
 	"code.google.com/p/gorest"
 	distance "distance"
 	"net/http"

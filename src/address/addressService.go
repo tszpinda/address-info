@@ -1,7 +1,7 @@
-package addrLookup
+package address
 
 import (
-	addrLookup "addrLookup/google"
+	address "address/google"
 	"code.google.com/p/gorest"
 	"fmt"
 	"model"
@@ -16,7 +16,7 @@ type AddressService struct {
 func (serv AddressService) GetAddress(postcode string) model.Address {
 	fmt.Println("incoming GetAddress request: ", postcode)
 
-	a, err := addrLookup.GetAddress(postcode)
+	a, err := address.GetAddress(postcode)
 	if err != nil {
 		if strings.ContainsAny(err.Error(), "Unable to find address") {		
 			serv.ResponseBuilder().SetResponseCode(404).WriteAndOveride([]byte("Postcode '" + postcode + "' not found"))

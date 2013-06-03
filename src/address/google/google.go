@@ -1,7 +1,7 @@
 package google
 
 import (
-	"addrLookup/filecache"
+	"address/filecache"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
