@@ -70,12 +70,15 @@ func contains(sl []string, text string) bool {
 	return false
 }
 
+//uses 2 google api for more precise address 
+//first one to get latitude and longitude
+//the from coordinates get address
 func GetAddress(postcode string) (model.Address, error) {
 	a, f := filecache.GetAddress(postcode)
 	if f {
 		return a, nil
 	}
-
+	
 	lat, lng, err := getGeometry(postcode)
 	if err != nil {
 		address := model.Address{}

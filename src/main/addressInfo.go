@@ -1,36 +1,16 @@
 package main
 
 import (
-	addrLookup "addrLookup/google"
-	distLookup "distance/google"
-	"log"
-	"fmt"
+	address "addrLookup"
+	"code.google.com/p/gorest"
+	distance "distance"
+	"net/http"
 )
 
 func main() {
-	postcode := "EX16 6AB"
-	address, err := addrLookup.GetAddress(postcode)
-	if err != nil {
-		fmt.Printf("%+v\n", err)
-	} else {
-		fmt.Printf("%+v\n", address)
-	}
-	
-	fmt.Println("###### Check distance #####")
-	
-	postcode2 := "EX16 4QA"
-	m, err := distLookup.GetDistance(postcode, postcode2)
-	if err != nil {
-		fmt.Printf("%+v\n", err)
-		log.Fatal(err)
-	} else {
-		fmt.Printf("q1: %v \n", m)
-	}
-	m, err = distLookup.GetDistance(postcode2, postcode)
-	if err != nil {
-		fmt.Printf("%+v\n", err)
-		log.Fatal(err)
-	} else {
-		fmt.Printf("q2: %v \n", m)
-	}
+	ds := new(distance.DistanceService)
+	gorest.RegisterService(ds)
+	gorest.RegisterService(new(address.AddressService))
+	http.Handle("/", gorest.Handle())
+	http.ListenAndServe(":8080", nil)
 }
