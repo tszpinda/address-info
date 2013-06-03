@@ -20,8 +20,11 @@ go run src/main/addressInfo.go
 ```
 
 API used:
+
 https://developers.google.com/maps/documentation/geocoding/
+
 https://developers.google.com/maps/documentation/directions/
 
-be aware of:
+BE AWARE OF:
+
 Note: the Directions API may only be used in conjunction with displaying results on a Google map; using Directions data without displaying a map for which directions data was requested is prohibited. Additionally, calculation of directions generates copyrights and warnings which must be displayed to the user in some fashion. For complete details on allowed usage, consult the Maps API Terms of Service License Restrictions.
