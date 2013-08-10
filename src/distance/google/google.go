@@ -1,7 +1,6 @@
 package google
 
 import (
-	"distance/filecache"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -24,10 +23,6 @@ type DistanceResponse struct {
 func GetDistance(p1, p2 string) (meters float64, err error) {
 	p1 = url.QueryEscape(p1)
 	p2 = url.QueryEscape(p2)
-	d, f := filecache.GetDistance(p1, p2)
-	if f {
-		return d.Meters, nil
-	}
 
 	urlTemplate := "http://maps.googleapis.com/maps/api/directions/json?origin=%s&destination=%s&sensor=false"
 	driveTimeUrl := fmt.Sprintf(urlTemplate, p1, p2)
@@ -50,7 +45,6 @@ func GetDistance(p1, p2 string) (meters float64, err error) {
 		
 		distance := distanceResponse.Routes[0].Legs[0].Distance
 		meters = distance.Value
-		filecache.CacheDistance(p1, p2, meters)
 	} else {
 		return 0, err
 	}

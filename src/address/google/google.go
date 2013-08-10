@@ -74,9 +74,12 @@ func contains(sl []string, text string) bool {
 //first one to get latitude and longitude
 //the from coordinates get address
 func GetAddress(postcode string) (model.Address, error) {
-	a, f := filecache.GetAddress(postcode)
-	if f {
-		return a, nil
+	cacheDisabled := true
+	if !cacheDisabled {
+		a, f := filecache.GetAddress(postcode)
+		if f {
+			return a, nil
+		}
 	}
 	
 	lat, lng, err := getGeometry(postcode)
