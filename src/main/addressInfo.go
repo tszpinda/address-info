@@ -21,7 +21,7 @@ func main() {
 
 	serveSingle("/favicon.ico", "./favicon.ico")
 	view.Mount()
-	
+
 	http.Handle("/", gorest.Handle())
 	http.ListenAndServe(":8080", nil)
 }

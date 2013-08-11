@@ -7,7 +7,7 @@
    </head>
    <body>
       <div class="row-fluid">
-         <div class="span4 offset1">
+         <div class="span5 offset1">
             <div class="alert alert-error" id="alert" style="display:none">
             </div>
             <form id="distanceForm" class="form-horizontal">
